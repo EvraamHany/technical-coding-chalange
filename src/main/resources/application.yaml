@@ -1,0 +1,26 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  #################### postgres Configuration #####################################
+  datasource:
+    url: jdbc:postgresql://localhost:5432/technicalCodingChallange
+    username: myPostgres
+    password: pgpassword
+
+
+
+  jpa:
+    generate-ddl: true
+    show-sql: false
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_schema: public
+
+    defer-datasource-initialization: true
+
+
