@@ -106,6 +106,17 @@ public class DeviceService {
         return deviceRepo.save(device);
     }
 
+    public boolean deleteDevice(Long id) {
+        if (deviceRepo.existsById(id)) {
+            deviceRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Device> searchDevicesByBrand(String brand) {
+        return deviceRepo.findByBrandContainingIgnoreCase(brand);
+    }
 
 
 

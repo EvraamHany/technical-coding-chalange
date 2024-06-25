@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface DeviceRepo extends JpaRepository<Device, Long>, JpaSpecificationExecutor<Device> {
     Optional<List<Device>> findByBrand(String brand);
     Optional<Device> findDeviceByName(String name);
+    List<Device> findByBrandContainingIgnoreCase(String brand);
+
 }

@@ -79,5 +79,19 @@ public DeviceController(DeviceService deviceService) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDevice(@PathVariable Long id) {
+        boolean isDeleted = deviceService.deleteDevice(id);
+        if (isDeleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<Device>> searchDevicesByBrand(@RequestParam String brand) {
+        List<Device> devices = deviceService.searchDevicesByBrand(brand);
+        return ResponseEntity.ok(devices);
+    }
 
 }
