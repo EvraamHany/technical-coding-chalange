@@ -59,9 +59,6 @@ public class DeviceService {
         }catch (NumberFormatException e) {
             throw new BadRequestException("invalid id format for device");
         }
-        catch (Exception e){
-            throw new InternalServerErrorException("oops something went wrong");
-        }
     }
 
     public Page<Device> getAllDevices(int page, int size, String sortBy, String name, String brand) {
