@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import technicalCodingChallange.exceptions.BadRequestException;
 import technicalCodingChallange.exceptions.DeviceValidationException;
 import technicalCodingChallange.exceptions.InternalServerErrorException;
@@ -14,13 +15,12 @@ import technicalCodingChallange.exceptions.NotFoundException;
 import technicalCodingChallange.model.Device;
 import technicalCodingChallange.repository.DeviceRepo;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.Predicate;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DeviceService {
@@ -86,6 +86,25 @@ public class DeviceService {
         }
     }
 
+    public Device updateDevice(Long id, Device updatedDevice) {
+        if (!deviceRepo.existsById(id)) {
+            throw new EntityNotFoundException("Device not found");
+        }
+        updatedDevice.setId(id);
+        return deviceRepo.save(updatedDevice);
+    }
+
+    public Device partiallyUpdateDevice(Long id, Map<String, Object> updates) {
+        Device device = deviceRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Device not found"));
+
+        updates.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Device.class, key);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, device, value);
+        });
+
+        return deviceRepo.save(device);
+    }
 
 
 
