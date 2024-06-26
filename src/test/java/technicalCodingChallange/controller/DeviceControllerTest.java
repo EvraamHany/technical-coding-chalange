@@ -32,7 +32,7 @@ public class DeviceControllerTest {
 
     @Test
     public void testCreateDevice() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 13", "apple");
 
         when(deviceService.addDevice(any(Device.class))).thenReturn(device);
 
@@ -50,13 +50,13 @@ public class DeviceControllerTest {
 
     @Test
     public void testCreateDevice_NullDeviceName() {
-        Device device = new Device(null, "Brand1");
+        Device device = new Device(null, "apple");
         assertThrows(BadRequestException.class, () -> deviceController.createDevice(device));
     }
 
     @Test
     public void testCreateDevice_InternalServerError() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 13", "apple");
 
         when(deviceService.addDevice(any(Device.class))).thenThrow(RuntimeException.class);
 
@@ -65,7 +65,7 @@ public class DeviceControllerTest {
 
     @Test
     public void testGetDeviceById() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 13", "apple");
         device.setId(1L);
 
         when(deviceService.getDeviceById("1")).thenReturn(device);
@@ -94,7 +94,7 @@ public class DeviceControllerTest {
 
     @Test
     public void testGetAllDevices() {
-        List<Device> devices = Arrays.asList(new Device("Device1", "Brand1"), new Device("Device2", "Brand2"));
+        List<Device> devices = Arrays.asList(new Device("iphone 13", "apple"), new Device("A 15", "samsung"));
         Page<Device> devicePage = new PageImpl<>(devices);
 
         when(deviceService.getAllDevices(0, 10, "id", null, null)).thenReturn(devicePage);
@@ -108,7 +108,7 @@ public class DeviceControllerTest {
 
     @Test
     public void testUpdateDevice() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 13", "apple");
         device.setId(1L);
 
         when(deviceService.updateDevice(anyLong(), any(Device.class))).thenReturn(device);
@@ -124,20 +124,20 @@ public class DeviceControllerTest {
     public void testUpdateDevice_NotFound() {
         when(deviceService.updateDevice(anyLong(), any(Device.class))).thenReturn(null);
 
-        ResponseEntity<Device> response = deviceController.updateDevice(1L, new Device("Device1", "Brand1"));
+        ResponseEntity<Device> response = deviceController.updateDevice(1L, new Device("iphone 13", "apple"));
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     public void testPartiallyUpdateDevice() {
-        Device existingDevice = new Device("Device1", "Brand1");
+        Device existingDevice = new Device("iphone 13", "apple");
         existingDevice.setId(1L);
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", "UpdatedDevice");
 
-        Device updatedDevice = new Device("UpdatedDevice", "Brand1");
+        Device updatedDevice = new Device("UpdatedDevice", "apple");
         updatedDevice.setId(1L);
 
         when(deviceService.partiallyUpdateDevice(anyLong(), anyMap())).thenReturn(updatedDevice);
@@ -181,11 +181,11 @@ public class DeviceControllerTest {
 
     @Test
     public void testSearchDevicesByBrand() {
-        List<Device> devices = Arrays.asList(new Device("Device1", "Brand1"), new Device("Device2", "Brand1"));
+        List<Device> devices = Arrays.asList(new Device("iphone 13", "apple"), new Device("A 15", "apple"));
 
-        when(deviceService.searchDevicesByBrand("Brand1")).thenReturn(devices);
+        when(deviceService.searchDevicesByBrand("apple")).thenReturn(devices);
 
-        ResponseEntity<List<Device>> response = deviceController.searchDevicesByBrand("Brand1");
+        ResponseEntity<List<Device>> response = deviceController.searchDevicesByBrand("apple");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

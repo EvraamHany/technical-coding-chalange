@@ -35,7 +35,7 @@ public class DeviceServiceTest {
 
     @Test
     public void testAddDevice() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 11", "apple");
 
         when(deviceRepo.findDeviceByName(device.getName())).thenReturn(Optional.empty());
         when(deviceRepo.save(device)).thenReturn(device);
@@ -47,7 +47,7 @@ public class DeviceServiceTest {
 
     @Test
     public void testAddDevice_DuplicateName() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 11", "apple");
         when(deviceRepo.findDeviceByName(device.getName())).thenReturn(Optional.of(device));
 
         assertThrows(DeviceValidationException.class, () -> deviceService.addDevice(device));
@@ -55,7 +55,7 @@ public class DeviceServiceTest {
 
     @Test
     public void testAddDevice_ConstraintViolationException() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 11", "apple");
 
         when(deviceRepo.findDeviceByName(device.getName())).thenReturn(Optional.empty());
         when(deviceRepo.save(device)).thenThrow(ConstraintViolationException.class);
@@ -65,7 +65,7 @@ public class DeviceServiceTest {
 
     @Test
     public void testGetDeviceById() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 11", "apple");
         device.setId(1L);
 
         when(deviceRepo.findById(device.getId())).thenReturn(Optional.of(device));
@@ -89,7 +89,7 @@ public class DeviceServiceTest {
 
     @Test
     public void testGetAllDevices() {
-        List<Device> devices = Arrays.asList(new Device("Device1", "Brand1"), new Device("Device2", "Brand2"));
+        List<Device> devices = Arrays.asList(new Device("iphone 11", "apple"), new Device("A 15", "Brand2"));
         Page<Device> devicePage = new PageImpl<>(devices);
 
         when(deviceRepo.findAll((Specification<Device>) any(), any(Pageable.class))).thenReturn(devicePage);
@@ -101,7 +101,7 @@ public class DeviceServiceTest {
 
     @Test
     public void testUpdateDevice() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 11", "apple");
         device.setId(1L);
 
         when(deviceRepo.existsById(device.getId())).thenReturn(true);
@@ -116,12 +116,12 @@ public class DeviceServiceTest {
     public void testUpdateDevice_NotFound() {
         when(deviceRepo.existsById(anyLong())).thenReturn(false);
 
-        assertThrows(EntityNotFoundException.class, () -> deviceService.updateDevice(1L, new Device("Device1", "Brand1")));
+        assertThrows(EntityNotFoundException.class, () -> deviceService.updateDevice(1L, new Device("iphone 11", "apple")));
     }
 
     @Test
     public void testPartiallyUpdateDevice() {
-        Device device = new Device("Device1", "Brand1");
+        Device device = new Device("iphone 11", "apple");
         device.setId(1L);
 
         when(deviceRepo.findById(device.getId())).thenReturn(Optional.of(device));
@@ -162,11 +162,11 @@ public class DeviceServiceTest {
 
     @Test
     public void testSearchDevicesByBrand() {
-        List<Device> devices = Arrays.asList(new Device("Device1", "Brand1"), new Device("Device2", "Brand1"));
+        List<Device> devices = Arrays.asList(new Device("iphone 11", "apple"), new Device("A 15", "apple"));
 
-        when(deviceRepo.findByBrandContainingIgnoreCase("Brand1")).thenReturn(devices);
+        when(deviceRepo.findByBrandContainingIgnoreCase("apple")).thenReturn(devices);
 
-        List<Device> result = deviceService.searchDevicesByBrand("Brand1");
+        List<Device> result = deviceService.searchDevicesByBrand("apple");
         assertNotNull(result);
         assertEquals(2, result.size());
     }
