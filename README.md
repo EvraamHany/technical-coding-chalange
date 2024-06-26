@@ -50,3 +50,11 @@ update device PATCH
 search by brand
 
     curl --location 'http://localhost:8080/api/devices/search?brand=samsung'
+
+get all
+
+    curl --location --request GET 'http://localhost:8080/api/devices'
+
+delete device
+
+    curl --location --request DELETE 'http://localhost:8080/api/devices/1'
